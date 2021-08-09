@@ -13,6 +13,7 @@
   <title>Orinoco - Panier</title>
 </head>
 
+<!-- execution de la fonction 4 à la lecture de la page -->
 <body onload="recuperationProduitLocalStoragePourPagePanierEtCalculMontantTotalCommandePagePanier()">
 
   <headPagePanierer>
@@ -67,17 +68,20 @@
   
           </thead>
 
+          <!-- fonction 4 attachée à la balise TBODY id="table" ci dessous -->
           <tbody id="table"></tbody>
 
           <tfoot class="bg-dark text-light">
 
             <tr>
               <th colspan="2" class="alignement">Vider panier</th>
+              <!-- execution de la fonction 5 au clic sur le bouton -->
               <th colspan="2"><button onclick="boutonViderToutLePanierPagePanier()" class="vider"><i class="fa fa-trash"></i></button></th>
             </tr>
 
             <tr>
               <th colspan="2" class="alignement">Montant Total :</th>
+              <!-- fonction 4 attachée à la balise TH id="totalpanier" ci dessous -->
               <th colspan="2" id="totalPanier"></th>
             </tr>
             
@@ -92,6 +96,7 @@
 
       <div class="card mb-3">
         
+        <!-- fonction 7 attachée et executé sur la balise FORM ci dessous -->
         <form onsubmit="boutonValideCommandePagePanier()">
 
           <fieldset class="padleft padright mb-2">

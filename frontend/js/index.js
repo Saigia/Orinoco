@@ -9,6 +9,9 @@ if (strPanierDansStockage!=null){
 }
 console.log(strPanierDansStockage);
 
+/** fonction 1
+ * affichage de tous les produits et détails
+ */
 function afficheTousLesProduitsPageIndex(){
     fetch("http://localhost:3000/api/furniture") //Recuperation de l'API
     .then(res => res.json())
@@ -27,6 +30,9 @@ function afficheTousLesProduitsPageIndex(){
     })
 }
 
+/** fonction 2
+ * affichage du produit selectionne et de ses details
+ */
 function afficheDetailsProduitPageProduit(){
     let params = new URLSearchParams(window.location.search);
 
@@ -52,6 +58,9 @@ function afficheDetailsProduitPageProduit(){
     )
 }
 
+/** fonction 3
+ * choix de l'option et ajout du produit selectionne dans la panier
+ */
 function boutonAjoutPanierPageProduit(){
     let commande={
         id: produit._id,
@@ -65,6 +74,10 @@ function boutonAjoutPanierPageProduit(){
     localStorage.setItem("panier", strPanierStock);
 }
 
+/** fonction 4
+ * affichage des produits + details + options page panier
+ * calcul du montant de la commande
+ */
 function recuperationProduitLocalStoragePourPagePanierEtCalculMontantTotalCommandePagePanier(){
     let i = 0;
     for(const commande of panier){
@@ -86,11 +99,18 @@ function recuperationProduitLocalStoragePourPagePanierEtCalculMontantTotalComman
     document.getElementById("totalPanier").innerHTML = total +=`€`;
 }
 
+/** fonction 5
+ * supprime tous les produits selectionnes du panier
+ */
 function boutonViderToutLePanierPagePanier(){
     localStorage.removeItem("panier");
     window.location.href = "index.html";
 }
 
+/** fonction 6
+ * rattaché dans la fonction 4 du fichier js
+ * supprime un produit du panier
+ */
 function supprimeProduitPanier(i){
     let strPanierDansStockage=localStorage.getItem("panier");
     if (strPanierDansStockage!=null){
@@ -101,6 +121,9 @@ function supprimeProduitPanier(i){
     window.location.reload();
 }
 
+/** fonction 7
+ * verifie les saisies des champs de formulaire et envoi à l'API pour validation commande
+ */
 function boutonValideCommandePagePanier(){
     event.preventDefault();
     let products = [];
@@ -114,27 +137,31 @@ function boutonValideCommandePagePanier(){
     let produitLS = JSON.parse(localStorage.getItem("panier"));
     produitLS.forEach(data_id=>{products.push(data_id.id)})
     console.log(products);
-    const regName = /([a-zA-Z\s-éçïë])+/;
-    const regAddress = /([a-zA-Z0-9\s-éçà])+/;
-    const regEmail = /([a-zA-Z0-9\.-_@])+/;
+    const regName = /^[a-z\s-éçïë]{2,30}$/i;
+    const regAddress = /^([a-z0-9\s-éçà])+$/i;
+    const regEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if(
-        regName.test(contact.lastName)==false &&
-        regName.test(contact.firstName)==false &&
-        regName.test(contact.city)==false &&
-        regAddress.test(contact.address)==false &&
+        regName.test(contact.lastName)==false ||
+        regName.test(contact.firstName)==false ||
+        regName.test(contact.city)==false ||
+        regAddress.test(contact.address)==false ||
         regEmail.test(contact.email)==false
-        ){
-            alert("Champ(s) invalide(s), merci de bien renseigner le formulaire");
-            return false;
-        } else {
+    ){
+        alert("Champ(s) invalide(s), merci de bien renseigner le formulaire");
+        return false;
+    } else {
         let donneesFormulaireCommande = JSON.stringify({
             contact,products
         });
-    console.log(donneesFormulaireCommande);
-    envoiCommandeEtDonneesFormulairePagePanierAuBackend(donneesFormulaireCommande);
+        console.log(donneesFormulaireCommande);
+        envoiCommandeEtDonneesFormulairePagePanierAuBackend(donneesFormulaireCommande);
     }
 }
 
+/** fonction 8
+ * rattaché dans la fonction 7 du fichier js
+ * recupere les donnees et les soumets au backend pour traiter la commande
+ */
 function envoiCommandeEtDonneesFormulairePagePanierAuBackend(donneesVide){//---requete POST
     fetch("http://localhost:3000/api/furniture/order", {
     method: 'POST',
@@ -156,8 +183,12 @@ function envoiCommandeEtDonneesFormulairePagePanierAuBackend(donneesVide){//---r
     .catch(error=>{
         console.log(error);
     });
+    return true
 }
 
+/** fonction 9
+ * genere la page de remerciement, n°commande et prix total
+ */
 function validationCommandeEtRemerciementsPageConfirmation(){
     let total = JSON.parse(localStorage.getItem("prixtotal"));
     let order = JSON.parse(localStorage.getItem("orderId"));
